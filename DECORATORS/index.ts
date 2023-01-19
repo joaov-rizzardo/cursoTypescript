@@ -91,3 +91,62 @@ class Machine {
 const trator = new Machine("Trator")
 
 console.log(trator.showName())
+
+// 5 - acessor decorator
+class Monster {
+    name?
+    age?
+
+    constructor(name: string, age: number){
+        this.name = name
+        this.age = age
+    }
+
+    @enumerable(true)
+    get showName(){
+        return `Nome do monstro: ${this.name}`
+    }
+
+    @enumerable(false)
+    get showAge(){
+        return `Idade do monstro: ${this.age}`
+    }
+}
+
+const charmander = new Monster("Charmander", 10)
+
+console.log(charmander)
+
+// 6 - property decorator
+//1 - 00005
+function formatNumber (){
+    return function(target: Object, propertKey: string){
+
+        let value: string
+
+        const getter = function() {
+            return value
+        }
+
+        const setter = function(newVal: string){
+            value = newVal.padStart(5, "0")
+        }
+
+        Object.defineProperty(target, propertKey, {
+            set: setter,
+            get: getter
+        })
+    }
+}
+class ID {
+    @formatNumber()
+    id
+
+    constructor(id: string){
+        this.id = id
+    }
+}
+
+const newItem = new ID("1")
+
+console.log(newItem)

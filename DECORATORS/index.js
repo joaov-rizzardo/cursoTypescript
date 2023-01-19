@@ -84,3 +84,51 @@ __decorate([
 ], Machine.prototype, "showName", null);
 const trator = new Machine("Trator");
 console.log(trator.showName());
+// 5 - acessor decorator
+class Monster {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+    get showName() {
+        return `Nome do monstro: ${this.name}`;
+    }
+    get showAge() {
+        return `Idade do monstro: ${this.age}`;
+    }
+}
+__decorate([
+    enumerable(true)
+], Monster.prototype, "showName", null);
+__decorate([
+    enumerable(false)
+], Monster.prototype, "showAge", null);
+const charmander = new Monster("Charmander", 10);
+console.log(charmander);
+// 6 - property decorator
+//1 - 00005
+function formatNumber() {
+    return function (target, propertKey) {
+        let value;
+        const getter = function () {
+            return value;
+        };
+        const setter = function (newVal) {
+            value = newVal.padStart(5, "0");
+        };
+        Object.defineProperty(target, propertKey, {
+            set: setter,
+            get: getter
+        });
+    };
+}
+class ID {
+    constructor(id) {
+        this.id = id;
+    }
+}
+__decorate([
+    formatNumber()
+], ID.prototype, "id", void 0);
+const newItem = new ID("1");
+console.log(newItem);
