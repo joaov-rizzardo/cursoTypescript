@@ -132,3 +132,94 @@ __decorate([
 ], ID.prototype, "id", void 0);
 const newItem = new ID("1");
 console.log(newItem);
+// 7 - exemplo real com class decorator
+function createdDate(created) {
+    created.prototype.createdAt = new Date;
+}
+let Book = class Book {
+    constructor(id) {
+        this.id = id;
+    }
+};
+Book = __decorate([
+    createdDate
+], Book);
+let Pen = class Pen {
+    constructor(id) {
+        this.id = id;
+    }
+};
+Pen = __decorate([
+    createdDate
+], Pen);
+const newBook = new Book(12);
+const pen = new Pen(55);
+console.log(newBook);
+console.log(pen);
+console.log(newBook.createdAt);
+// 8 - exemplo real method decorator
+function checkIfUserPosted() {
+    return function (target, key, descriptor) {
+        const childFunction = descriptor.value;
+        console.log(childFunction);
+        descriptor.value = function (...args) {
+            if (args[1] === true) {
+                console.log("Usuário já postou!");
+                return null;
+            }
+            else {
+                return childFunction.apply(this, args);
+            }
+        };
+        return descriptor;
+    };
+}
+class Post {
+    constructor() {
+        this.alreadyPosted = false;
+    }
+    post(content, alreadyPosted) {
+        this.alreadyPosted = true;
+        console.log(`Post do usuário: ${content}`);
+    }
+}
+__decorate([
+    checkIfUserPosted()
+], Post.prototype, "post", null);
+const newPost = new Post();
+newPost.post("Meu primeiro post!", newPost.alreadyPosted);
+newPost.post("Meu segundo post!", newPost.alreadyPosted);
+// 9 - exemplo real property decorator
+function Max(limit) {
+    return function (target, propertyKey) {
+        let value;
+        const getter = function () {
+            return value;
+        };
+        const setter = function (newVal) {
+            if (newVal.length > limit) {
+                console.log(`O valor deve ter no máximo ${limit} digitos`);
+                return;
+            }
+            else {
+                value = newVal;
+            }
+        };
+        Object.defineProperty(target, propertyKey, {
+            get: getter,
+            set: setter
+        });
+    };
+}
+class Admin {
+    constructor(username) {
+        this.username = username;
+    }
+}
+__decorate([
+    Max(10)
+], Admin.prototype, "username", void 0);
+let pedro = new Admin("pedroadmin12345");
+console.log(pedro);
+let lee = new Admin("Lee");
+console.log(lee);
