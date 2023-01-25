@@ -5,9 +5,17 @@ export interface IAppProps {
     content: string
     commentQty: number
     tags: string[]
+    // 8 - enum
+    category: Category
 }
 
-export default function Destructuring ({title, content, commentQty, tags}: IAppProps) {
+export enum Category {
+  JS = "JavaScript",
+  TS = "TypeScript",
+  P = "Python"
+}
+
+export default function Destructuring ({title, content, commentQty, tags, category}: IAppProps) {
   return (
     <div>
         <h2>{title}</h2>
@@ -18,6 +26,7 @@ export default function Destructuring ({title, content, commentQty, tags}: IAppP
                 <span>#{tag}</span>
             ))}
         </div>
+        <h4>Categoria: {category}</h4>
     </div>
   );
 }
